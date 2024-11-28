@@ -1,0 +1,70 @@
+#!/bin/bash
+set -e
+
+MODEL=$1
+VERSION=23.05.3
+BUILDDIR=/tmp/openwrt-build
+BASE_PACKAGES=" \
+  dropbear \
+  tcpdump-mini \
+  "
+
+case $MODEL in
+"gl-mt300n-v2")
+  PLATFORM=ramips
+  TYPE=mt76x8
+  TARGET_DEVICE=ramips-mt76x8
+  PROFILE=glinet_gl-mt300n-v2
+  EXTRA_PACKAGES="\
+    uboot-envtools \
+    opennds \
+    watchcat \
+  "
+  REMOVED_PACKAGES="\
+    -odhcpd \
+    -odhcpd-ipv6only \
+    "
+;;
+
+"other-device")
+  PLATFORM=realtek
+  TYPE=rtl838x
+  TARGET_DEVICE=.... # add device here
+  PROFILE=.... # add profile here
+  EXTRA_PACKAGES="\
+  ... # add packages here
+  "
+  REMOVED_PACKAGES="\
+  ... # remove packages here
+    " # dhcpv6 stuff provided by dnsmasq-full
+;;
+
+
+*)
+  echo "specify build target (gl-mt300n-v2 or other-device)"
+  exit 1
+;;
+esac
+
+if [ ! -d ${BUILDDIR} ] ; then
+  mkdir ${BUILDDIR}
+fi
+
+# the need for $TYPE and $TARGET_DEVICE seems dumb but it helps get aroudn the problem of downloads        ↓↓↓↓↓↓↓
+# http://downloads.openwrt.org/releases/18.06.1/targets/ath79/generic/openwrt-imagebuilder-18.06.1-ath79-generic.Linux-x86_64.tar.xz
+#http://downloads.openwrt.org/releases/18.06.1/targets/ipq40xx/generic/openwrt-imagebuilder-18.06.1-ipq40xx.Linux-x86_64.tar.xz
+
+if [ ! -d ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 ] ; then
+  if [ ! -f ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz ]; then
+   (cd ${BUILDDIR} && curl -C - -O https://downloads.openwrt.org/releases/${VERSION}/targets/${PLATFORM}/${TYPE}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz )
+  fi
+  tar xfJ ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz -C ${BUILDDIR}/
+fi
+
+COMBINED_PACKAGE_LIST="`echo ${REMOVED_PACKAGES}` `echo ${BASE_PACKAGES}` `echo ${EXTRA_PACKAGES}`"
+echo "Combined package list ${COMBINED_PACKAGE_LIST}"
+
+echo "Building ${VERSION}..."
+( cd ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 && sudo make image PROFILE="$PROFILE" PACKAGES="$COMBINED_PACKAGE_LIST" )
+
+echo "scp -O ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64/bin/targets/${PLATFORM}/${TYPE}/openwrt-${VERSION}-${TARGET_DEVICE}-${PROFILE}-squashfs-sysupgrade.bin root@<dest>:/tmp"
