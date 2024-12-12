@@ -5,10 +5,39 @@ MODEL=$1
 VERSION=23.05.3
 BUILDDIR=/tmp/openwrt-build
 BASE_PACKAGES=" \
+  base-files \
+  busybox \
+  ca-bundle \
+  dnsmasq \
   dropbear \
-  tcpdump-mini \
+  firewall4 \
+  fstools \
+  kmod-gpio-button-hotplug \
+  kmod-leds-gpio \
+  kmod-nft-offload \
+  libc \
+  libgcc \
+  libustream-mbedtls \
+  logd \
+  mtd \
+  netifd \
+  nftables \
+  odhcp6c \
+  opkg \
+  ppp \
+  ppp-mod-pppoe \
+  procd \
+  procd-seccomp \
+  procd-ujail \
+  swconfig \
+  uci \
+  uclient-fetch \
+  urandom-seed \
+  urngd \
+  openssh-sftp-server\
   "
 
+# For the gl-ar300m case, modify the EXTRA_PACKAGES:
 case $MODEL in
 "gl-mt300n-v2")
   PLATFORM=ramips
@@ -17,9 +46,10 @@ case $MODEL in
   PROFILE=glinet_gl-mt300n-v2
   EXTRA_PACKAGES="\
     uboot-envtools \
-    opennds \
     watchcat \
-  "
+    luci \
+    luci-ssl \
+  "     # opennds \
   REMOVED_PACKAGES="\
     -odhcpd \
     -odhcpd-ipv6only \
