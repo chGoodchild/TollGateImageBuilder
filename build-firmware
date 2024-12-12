@@ -97,11 +97,11 @@ case $MODEL in
 ;;
 
 "gl-e750")
-  VERSION="snapshot"  # Override the version for E750
-  PLATFORM=ramips
-  TYPE=mt76x8
-  TARGET_DEVICE=ramips-mt76x8
-  PROFILE=glinet_gl-mudi
+  VERSION="snapshot"
+  PLATFORM=ath79
+  TYPE=nand          # Changed from mt76x8 to nand
+  TARGET_DEVICE=ath79-nand
+  PROFILE=glinet_gl-e750
   EXTRA_PACKAGES="\
     kmod-usb2 \
     kmod-usb-core \
