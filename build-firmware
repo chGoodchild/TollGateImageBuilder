@@ -52,8 +52,8 @@ case $MODEL in
 
 "gl-mt3000")
   PLATFORM=mediatek
-  TYPE=mt7981
-  TARGET_DEVICE=mediatek-mt7981
+  TYPE=filogic
+  TARGET_DEVICE=mediatek-filogic
   PROFILE=glinet_gl-mt3000
   EXTRA_PACKAGES="\
     kmod-usb2 \
@@ -68,13 +68,15 @@ case $MODEL in
     -odhcpd \
     -odhcpd-ipv6only \
     -wpad-basic-wolfssl \
+    -wpad-basic-mbedtls \
+    -wpad-mini \
     "
 ;;
 
 "gl-mt6000")
   PLATFORM=mediatek
-  TYPE=mt7981
-  TARGET_DEVICE=mediatek-mt7981
+  TYPE=filogic
+  TARGET_DEVICE=mediatek-filogic
   PROFILE=glinet_gl-mt6000
   EXTRA_PACKAGES="\
     kmod-usb2 \
@@ -89,11 +91,13 @@ case $MODEL in
     -odhcpd \
     -odhcpd-ipv6only \
     -wpad-basic-wolfssl \
+    -wpad-basic-mbedtls \
+    -wpad-mini \
     "
 ;;
 
 "gl-e750")
-  PLATFORM=mediatek
+  PLATFORM=ramips
   TYPE=mt76x8
   TARGET_DEVICE=ramips-mt76x8
   PROFILE=glinet_gl-e750
