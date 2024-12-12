@@ -26,22 +26,31 @@ case $MODEL in
     "
 ;;
 
-"other-device")
-  PLATFORM=realtek
-  TYPE=rtl838x
-  TARGET_DEVICE=.... # add device here
-  PROFILE=.... # add profile here
+"gl-ar300m")
+  PLATFORM=ath79
+  TYPE=generic
+  TARGET_DEVICE=ath79-generic
+  PROFILE=glinet_gl-ar300m
   EXTRA_PACKAGES="\
-  ... # add packages here
-  "
+    uboot-envtools \
+    kmod-usb2 \
+    kmod-usb-core \
+    kmod-usb-storage \
+    luci \
+    luci-ssl \
+    iwinfo \
+    wpad-wolfssl \
+    "
   REMOVED_PACKAGES="\
-  ... # remove packages here
-    " # dhcpv6 stuff provided by dnsmasq-full
+    -odhcpd \
+    -odhcpd-ipv6only \
+    -wpad-basic-wolfssl \
+    "
 ;;
 
 
 *)
-  echo "specify build target (gl-mt300n-v2 or other-device)"
+  echo "specify build target (gl-mt300n-v2 or gl-ar300m)"
   exit 1
 ;;
 esac
@@ -64,7 +73,9 @@ fi
 COMBINED_PACKAGE_LIST="`echo ${REMOVED_PACKAGES}` `echo ${BASE_PACKAGES}` `echo ${EXTRA_PACKAGES}`"
 echo "Combined package list ${COMBINED_PACKAGE_LIST}"
 
-echo "Building ${VERSION}..."
-( cd ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 && sudo make image PROFILE="$PROFILE" PACKAGES="$COMBINED_PACKAGE_LIST" )
+CORES=$(nproc)
+
+echo "Building ${VERSION} using ${CORES} cores..."
+( cd ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 && sudo make -j${CORES} image PROFILE="$PROFILE" PACKAGES="$COMBINED_PACKAGE_LIST" )
 
 echo "scp -O ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64/bin/targets/${PLATFORM}/${TYPE}/openwrt-${VERSION}-${TARGET_DEVICE}-${PROFILE}-squashfs-sysupgrade.bin root@<dest>:/tmp"

@@ -35,10 +35,11 @@ RUN apk add --no-cache \
         && \
     rm -f /usr/share/qemu/edk2-*
 
-ENV IMAGE_URL="https://downloads.openwrt.org/releases/21.02.3/targets/x86/64/openwrt-21.02.3-x86-64-generic-ext4-combined.img.gz"
-ENV IMAGE_FILE="openwrt-21.02.3-x86-64-generic-ext4-combined.img.gz"
-ENV IMAGE_SHA256="f5a0401048d6fb3f707581c4914086093fecea642c86507714caea967a4a6a32"
+ENV IMAGE_URL="https://downloads.openwrt.org/releases/23.05.3/targets/x86/64/openwrt-23.05.3-x86-64-generic-ext4-d.img.gz"
+ENV IMAGE_FILE="openwrt-23.05.3-x86-64-generic-ext4-combined.img.gz"
+ENV IMAGE_SHA256="28cf53e6bd9bb68958aae7958e7950d967f02b46"
 
+# Rest of the Dockerfile remains the same
 WORKDIR /var/lib/qemu-image
 RUN curl -L "${IMAGE_URL}" -o "${IMAGE_FILE}" && \
     sh -x -c '[ "$(sha256sum "${IMAGE_FILE}")" = "${IMAGE_SHA256}  ${IMAGE_FILE}" ]'
