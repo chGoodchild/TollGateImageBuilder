@@ -130,23 +130,24 @@ fi
 
 if [ "$VERSION" = "snapshot" ]; then
   IMAGEBUILDER_NAME="openwrt-imagebuilder-${PLATFORM}-${TYPE}.Linux-x86_64"
-  DOWNLOAD_URL="https://downloads.openwrt.org/snapshots/targets/${PLATFORM}/${TYPE}/${IMAGEBUILDER_NAME}.tar.zst"  # Note the .tar.zst extension
+  DOWNLOAD_URL="https://downloads.openwrt.org/snapshots/targets/${PLATFORM}/${TYPE}/${IMAGEBUILDER_NAME}.tar.zst"
+  ARCHIVE_EXT="tar.zst"
 else
   IMAGEBUILDER_NAME="openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64"
   DOWNLOAD_URL="https://downloads.openwrt.org/releases/${VERSION}/targets/${PLATFORM}/${TYPE}/${IMAGEBUILDER_NAME}.tar.xz"
+  ARCHIVE_EXT="tar.xz"
 fi
 
 if [ ! -d ${BUILDDIR}/${IMAGEBUILDER_NAME} ] ; then
-  if [ ! -f ${BUILDDIR}/${IMAGEBUILDER_NAME}.tar.xz ]; then
+  if [ ! -f ${BUILDDIR}/${IMAGEBUILDER_NAME}.${ARCHIVE_EXT} ]; then
    (cd ${BUILDDIR} && curl -C - -O ${DOWNLOAD_URL})
   fi
 
   if [ "$VERSION" = "snapshot" ]; then
-    tar --zstd -xf ${BUILDDIR}/${IMAGEBUILDER_NAME}.tar.zst -C ${BUILDDIR}/
+    tar --zstd -xf ${BUILDDIR}/${IMAGEBUILDER_NAME}.${ARCHIVE_EXT} -C ${BUILDDIR}/
   else
-    tar xfJ ${BUILDDIR}/${IMAGEBUILDER_NAME}.tar.xz -C ${BUILDDIR}/
+    tar xfJ ${BUILDDIR}/${IMAGEBUILDER_NAME}.${ARCHIVE_EXT} -C ${BUILDDIR}/
   fi
-
 fi
 
 COMBINED_PACKAGE_LIST="`echo ${REMOVED_PACKAGES}` `echo ${BASE_PACKAGES}` `echo ${EXTRA_PACKAGES}`"
