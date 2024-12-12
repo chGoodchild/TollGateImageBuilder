@@ -50,9 +50,67 @@ case $MODEL in
     "
 ;;
 
+"gl-mt3000")
+  PLATFORM=mediatek
+  TYPE=mt7981
+  TARGET_DEVICE=mediatek-mt7981
+  PROFILE=glinet_gl-mt3000
+  EXTRA_PACKAGES="\
+    kmod-usb2 \
+    kmod-usb-core \
+    kmod-usb-storage \
+    luci \
+    luci-ssl \
+    iwinfo \
+    wpad-wolfssl \
+    "
+  REMOVED_PACKAGES="\
+    -odhcpd \
+    -odhcpd-ipv6only \
+    -wpad-basic-wolfssl \
+    "
+;;
+
+"gl-mt6000")
+  PLATFORM=mediatek
+  TYPE=mt7981
+  TARGET_DEVICE=mediatek-mt7981
+  PROFILE=glinet_gl-mt6000
+  EXTRA_PACKAGES="\
+    kmod-usb2 \
+    kmod-usb-core \
+    kmod-usb-storage \
+    luci \
+    luci-ssl \
+    iwinfo \
+    wpad-wolfssl \
+    "
+  REMOVED_PACKAGES="\
+    -odhcpd \
+    -odhcpd-ipv6only \
+    -wpad-basic-wolfssl \
+    "
+;;
+
+"gl-e750")
+  PLATFORM=mediatek
+  TYPE=mt76x8
+  TARGET_DEVICE=ramips-mt76x8
+  PROFILE=glinet_gl-e750
+  EXTRA_PACKAGES="\
+    kmod-usb2 \
+    kmod-usb-core \
+    kmod-usb-storage \
+    uboot-envtools \
+    "
+  REMOVED_PACKAGES="\
+    -odhcpd \
+    -odhcpd-ipv6only \
+    "
+;;
 
 *)
-  echo "specify build target (gl-mt300n-v2 or gl-ar300m)"
+  echo "specify build target (gl-mt300n-v2, gl-ar300m, gl-mt3000, gl-mt6000, or gl-e750)"
   exit 1
 ;;
 esac
