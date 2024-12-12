@@ -19,7 +19,7 @@ case "$TARGET" in
         MACHINE="malta"
         CPU="24Kc"
         EXTRA_OPTS="-kernel /var/lib/qemu/vmlinux-malta \
-                   -append 'root=/dev/vda rootwait console=tty0 console=ttyS0,115200n8 rootwait'"
+                   -append 'root=/dev/vda'"
         ;;
     "gl-ar300m")
         # MIPS architecture (Atheros)
@@ -27,7 +27,7 @@ case "$TARGET" in
         MACHINE="malta"
         CPU="24Kc"
         EXTRA_OPTS="-kernel /var/lib/qemu/vmlinux-malta \
-                   -append 'root=/dev/vda rootwait console=tty0 console=ttyS0,115200n8 rootwait'"
+                   -append 'root=/dev/vda'"
         ;;
     "gl-mt3000"|"gl-mt6000")
         # ARM architecture (MediaTek)
