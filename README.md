@@ -23,3 +23,12 @@ sysupgrade -v /tmp/firmware-file
 ```
 
 Next steps would be to cross-compile any binaries outside of the OpenWRT ecosystem and have them pulled into the base image build process.
+
+
+```
+
+sudo docker build -t openwrt-tester .
+
+sudo docker run -it --rm --privileged -v /tmp/openwrt-build/openwrt-imagebuilder-ath79-nand.Linux-x86_64/bin/targets/ath79/nand/openwrt-ath79-nand-glinet_gl-e750-squashfs-sysupgrade.bin:/var/lib/qemu/firmware.bin openwrt-tester gl-e750 /var/lib/qemu/firmware.bin
+
+```
