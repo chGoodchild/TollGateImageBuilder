@@ -30,7 +30,7 @@ case $MODEL in
   PLATFORM=ath79
   TYPE=generic
   TARGET_DEVICE=ath79-generic
-  PROFILE=glinet_gl-ar300m
+  PROFILE=glinet_gl-ar300m16
   EXTRA_PACKAGES="\
     uboot-envtools \
     kmod-usb2 \
@@ -45,6 +45,8 @@ case $MODEL in
     -odhcpd \
     -odhcpd-ipv6only \
     -wpad-basic-wolfssl \
+    -wpad-basic-mbedtls \
+    -wpad-mini \
     "
 ;;
 
