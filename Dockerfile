@@ -34,9 +34,13 @@ RUN apk add --no-cache \
         qemu-img \
         socat
 
-# Create directories and set permissions
-RUN mkdir -p /var/lib/qemu && \
-    chmod 777 /var/lib/qemu
+# Create directories with proper permissions
+RUN mkdir -p /var/lib/qemu /var/lib/qemu/images && \
+    chmod 777 /var/lib/qemu /var/lib/qemu/images
+
+# Download MIPS kernel for QEMU
+RUN curl -L https://downloads.openwrt.org/releases/23.05.3/targets/malta/be/openwrt-23.05.3-malta-be-vmlinux.elf -o /var/lib/qemu/vmlinux-malta && \
+    chmod 644 /var/lib/qemu/vmlinux-malta
 
 COPY start-qemu.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/start-qemu.sh
@@ -44,8 +48,8 @@ RUN chmod +x /usr/local/bin/start-qemu.sh
 EXPOSE 30022
 EXPOSE 30080
 EXPOSE 30443
-VOLUME /var/lib/qemu
-WORKDIR /tmp
+VOLUME /var/lib/qemu/images
+WORKDIR /var/lib/qemu
 
 # Remove USER directive to run as root
 ENTRYPOINT ["/usr/local/bin/start-qemu.sh"]
