@@ -128,11 +128,19 @@ fi
 # http://downloads.openwrt.org/releases/18.06.1/targets/ath79/generic/openwrt-imagebuilder-18.06.1-ath79-generic.Linux-x86_64.tar.xz
 #http://downloads.openwrt.org/releases/18.06.1/targets/ipq40xx/generic/openwrt-imagebuilder-18.06.1-ipq40xx.Linux-x86_64.tar.xz
 
-if [ ! -d ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 ] ; then
-  if [ ! -f ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz ]; then
-   (cd ${BUILDDIR} && curl -C - -O https://downloads.openwrt.org/releases/${VERSION}/targets/${PLATFORM}/${TYPE}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz )
+if [ "$VERSION" = "snapshot" ]; then
+  IMAGEBUILDER_NAME="openwrt-imagebuilder-${TARGET_DEVICE}.Linux-x86_64"
+  DOWNLOAD_URL="https://downloads.openwrt.org/snapshots/targets/${PLATFORM}/${TYPE}/${IMAGEBUILDER_NAME}.tar.xz"
+else
+  IMAGEBUILDER_NAME="openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64"
+  DOWNLOAD_URL="https://downloads.openwrt.org/releases/${VERSION}/targets/${PLATFORM}/${TYPE}/${IMAGEBUILDER_NAME}.tar.xz"
+fi
+
+if [ ! -d ${BUILDDIR}/${IMAGEBUILDER_NAME} ] ; then
+  if [ ! -f ${BUILDDIR}/${IMAGEBUILDER_NAME}.tar.xz ]; then
+   (cd ${BUILDDIR} && curl -C - -O ${DOWNLOAD_URL})
   fi
-  tar xfJ ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64.tar.xz -C ${BUILDDIR}/
+  tar xfJ ${BUILDDIR}/${IMAGEBUILDER_NAME}.tar.xz -C ${BUILDDIR}/
 fi
 
 COMBINED_PACKAGE_LIST="`echo ${REMOVED_PACKAGES}` `echo ${BASE_PACKAGES}` `echo ${EXTRA_PACKAGES}`"
@@ -141,6 +149,6 @@ echo "Combined package list ${COMBINED_PACKAGE_LIST}"
 CORES=$(nproc)
 
 echo "Building ${VERSION} using ${CORES} cores..."
-( cd ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64 && sudo make -j${CORES} image PROFILE="$PROFILE" PACKAGES="$COMBINED_PACKAGE_LIST" )
+( cd ${BUILDDIR}/${IMAGEBUILDER_NAME} && sudo make -j${CORES} image PROFILE="$PROFILE" PACKAGES="$COMBINED_PACKAGE_LIST" )
 
-echo "scp -O ${BUILDDIR}/openwrt-imagebuilder-${VERSION}-${TARGET_DEVICE}.Linux-x86_64/bin/targets/${PLATFORM}/${TYPE}/openwrt-${VERSION}-${TARGET_DEVICE}-${PROFILE}-squashfs-sysupgrade.bin root@<dest>:/tmp"
+echo "scp -O ${BUILDDIR}/${IMAGEBUILDER_NAME}/bin/targets/${PLATFORM}/${TYPE}/openwrt-${TARGET_DEVICE}-${PROFILE}-squashfs-sysupgrade.bin root@<dest>:/tmp"
