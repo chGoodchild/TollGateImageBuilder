@@ -149,10 +149,10 @@ case $MODEL in
 ;;
 
 "archer_mr200")
-  PLATFORM=ath79
-  TYPE=generic
-  TARGET_DEVICE=ath79-generic
-  PROFILE=tplink_archer-mr200
+  PLATFORM=ramips
+  TYPE=mt7620
+  TARGET_DEVICE=ramips-mt7620
+  PROFILE=tplink_archer-mr200-v1  # Make sure this profile is correct as per OpenWRT documentation
   EXTRA_PACKAGES="\
     kmod-usb2 \
     kmod-usb-core \
