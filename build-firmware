@@ -152,7 +152,7 @@ case $MODEL in
   PLATFORM=ramips
   TYPE=mt7620
   TARGET_DEVICE=ramips-mt7620
-  PROFILE=tplink_archer-mr200-v1  # Make sure this profile is correct as per OpenWRT documentation
+  PROFILE=tplink_archer-mr200  # Update to the correct profile name
   EXTRA_PACKAGES="\
     kmod-usb2 \
     kmod-usb-core \
