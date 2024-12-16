@@ -1,6 +1,10 @@
 #!/bin/bash
 set -e
 
+# Install packages if needed
+sudo apt install -y gawk
+
+# Build openwrt image
 MODEL=$1
 VERSION=23.05.3
 BUILDDIR=/tmp/openwrt-build
@@ -129,7 +133,7 @@ case $MODEL in
 "gl-e750")
   VERSION="snapshot"
   PLATFORM=ath79
-  TYPE=nand          # Changed from mt76x8 to nand
+  TYPE=nand
   TARGET_DEVICE=ath79-nand
   PROFILE=glinet_gl-e750
   EXTRA_PACKAGES="\
@@ -144,8 +148,25 @@ case $MODEL in
     "
 ;;
 
+"archer_mr200")
+  PLATFORM=ath79
+  TYPE=generic
+  TARGET_DEVICE=ath79-generic
+  PROFILE=tplink_archer-mr200
+  EXTRA_PACKAGES="\
+    kmod-usb2 \
+    kmod-usb-core \
+    luci \
+    luci-ssl \
+    "
+  REMOVED_PACKAGES="\
+    -odhcpd \
+    -odhcpd-ipv6only \
+    "
+;;
+
 *)
-  echo "specify build target (gl-mt300n-v2, gl-ar300m, gl-mt3000, gl-mt6000, or gl-e750)"
+  echo "specify build target (gl-mt300n-v2, gl-ar300m, gl-mt3000, gl-mt6000, gl-e750, or archer_mr200)"
   exit 1
 ;;
 esac
